@@ -27,7 +27,12 @@ public class Pocket {
           this.file.seek(this.file.length());
           this.file.writeBytes(product+'\n'); 
     }
-
+   /**
+    * Resets the pocket. 
+    */
+    public void resetPocket() throws Exception {
+          this.file.setLength(0);
+    }
    /**
     * Closes the RandomAccessFile in this.file
     */
