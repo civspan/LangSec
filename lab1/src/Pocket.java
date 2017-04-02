@@ -28,7 +28,7 @@ public class Pocket {
           this.file.writeBytes(product+'\n'); 
     }
    /**
-    * Resets the pocket. 
+    * Resets the pocket. Written by group 31.
     */
     public void resetPocket() throws Exception {
           this.file.setLength(0);
