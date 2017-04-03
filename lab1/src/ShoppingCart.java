@@ -2,10 +2,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+
 public class ShoppingCart {
-	
+    
+
+    
     public static void main(String[] args){
-        
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
             System.out.print("Type 0 to exit\n1 to run buggy frontend \n2 to reset credits and pocket: ");
@@ -23,13 +25,14 @@ public class ShoppingCart {
                 case 0: 
                         return;
                 case 1: 
+
                         try {
+                            System.out.println(Thread.currentThread().getName() + ": Lock acquired.");
                             w = new Wallet();
                             p = new Pocket();
                             String prod;
                             int balance;
                             int price;
-
                             balance = w.getBalance();
                             System.out.println("Your balance: " + balance + " credits");
                             System.out.print(Store.asString());
@@ -42,21 +45,18 @@ public class ShoppingCart {
                             }
                             
                             price = Store.products.get(prod);
-                            if( (balance-price) < 0 ) {
-                                System.out.println("You cannot afford that product");
-                                return;
-                            }
-                            System.out.println("Pausing after comparing price and balance, but before updating balance..");
-                            br.readLine();
-                            w.setBalance( (balance-price) );
+                          
+                            w.safeWithdraw(price);
+                         //   System.out.println("Your new balance is: " + (balance-price) + " credits");
+                            
                             p.addProduct( prod );
-                            System.out.println("Your new balance is: " + (balance-price) + " credits");
+                            
                             w.close();      
                             p.close();
-                        } catch(Exception e){
-                            System.out.println("Error error!");
-                            e.printStackTrace();
-                        } 
+                      } catch(Exception e){
+                              System.out.println("Error error!");
+                              e.printStackTrace();
+                      } 
                         break;
                 case 2:    
                         try {
