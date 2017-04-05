@@ -26,8 +26,7 @@ public class ShoppingCart {
                 case 0: 
                         return;
                 case 1: 
-
-                        try {
+                        try{
                             w = new Wallet();
                             p = new Pocket();
                             String prod;
@@ -44,25 +43,20 @@ public class ShoppingCart {
                                 return;
                             }
                             price = Store.products.get(prod);
-                            try{
-                                balance = w.getBalance();
-                            } catch(ClosedChannelException e){
-                                System.out.println("wallet.txt is locked at this moment");
-                                e.printStackTrace();
-                            } catch (IOException e) {
-                                System.out.println("IO error");
-                                e.printStackTrace();}
+                            
+                            balance = w.getBalance();
+                            
                             if( (balance-price) < 0 ) 
                                 System.out.println("You cannot afford that product. Current balance: " + balance);
-    
-                            w.safeWithdraw(price);
-                            System.out.println("Your new balance is: " + (balance-price) + " credits");
-                            p.addProduct( prod );
-                            
+                            else {
+                                w.safeWithdraw(price);
+                                System.out.println("Your new balance is: " + (balance-price) + " credits");
+                                p.addProduct( prod );
+                            }
                             w.close();      
                             p.close();
-                        } catch(Exception e){
-                            System.out.println("Error error!");
+                        }catch (Exception e) {
+                            System.out.println("IO error");
                             e.printStackTrace();
                         }
                         break;

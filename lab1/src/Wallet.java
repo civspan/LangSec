@@ -29,21 +29,14 @@ public class Wallet {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int price = valueToWithdraw;
         this.lock  = channel.lock();
-        try{           
-            int balance = getBalance();
-            System.out.println("Pausing after comparing price and balance, but before updating balance..");
-            br.readLine();
-            setBalance( (balance-price) );
-        } catch(ClosedChannelException e){
-            System.out.println("Channel closed");
-    //        e.printStackTrace();
-        } catch(Exception e){
-            System.out.println("IO error, cannot access wallet.txt");
-    //        e.printStackTrace();
-        } finally {
-            close(); 
-            lock.release();
-        }
+                  
+        int balance = getBalance();
+        System.out.println("Pausing after comparing price and balance, but before updating balance..");
+        br.readLine();
+        setBalance( (balance-price) );
+
+        lock.release();
+        close(); 
     }	
 
 
