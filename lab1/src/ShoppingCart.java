@@ -1,8 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.channels.ClosedChannelException;
-
+import static java.lang.Thread.sleep;
 
 public class ShoppingCart {
     
@@ -58,6 +57,11 @@ public class ShoppingCart {
                         }catch (Exception e) {
                             System.out.println("IO error");
                             e.printStackTrace();
+                            try {
+                                sleep(100);
+                            } catch (InterruptedException ex) {
+                                System.out.println("Sleep interrupted");
+                            }
                         }
                         break;
                 case 2:    
@@ -71,6 +75,7 @@ public class ShoppingCart {
                         } catch (Exception e){
                             System.out.println("Error error!");
                             e.printStackTrace();
+                            
                         }
                         break;
             }
