@@ -1,12 +1,11 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.concurrent.locks.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
-import java.nio.channels.NonWritableChannelException;
+import java.nio.channels.ClosedChannelException;
 
 public class Wallet {
    /**
@@ -29,32 +28,22 @@ public class Wallet {
     public void safeWithdraw(int valueToWithdraw) throws Exception{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int price = valueToWithdraw;
-      //  System.out.println("Lock already used? "  );
-
-  //      System.out.println(Thread.currentThread().getName() + ": Lock acquired.");
         this.lock  = channel.lock();
         try{           
-                int balance = getBalance();
-                if( (balance-price) < 0 ) {
-                    System.out.println("You cannot afford that product. Current balance: " + balance);
-                }else {
-                    System.out.println("Pausing after comparing price and balance, but before updating balance..");
-                    br.readLine();
-                    setBalance( (balance-price) );
-                    System.out.println("Your new balance is: " + (balance-price) + " credits");
-            }
-                
-        } catch(NonWritableChannelException e){
-            System.out.println("Cannot write to wallet.txt at this moment");
-            e.printStackTrace();
+            int balance = getBalance();
+            System.out.println("Pausing after comparing price and balance, but before updating balance..");
+            br.readLine();
+            setBalance( (balance-price) );
+        } catch(ClosedChannelException e){
+            System.out.println("Channel closed");
+    //        e.printStackTrace();
         } catch(Exception e){
-            System.out.println("Error error!");
-            e.printStackTrace();
+            System.out.println("IO error, cannot access wallet.txt");
+    //        e.printStackTrace();
         } finally {
             close(); 
             lock.release();
         }
-       
     }	
 
 

@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.channels.ClosedChannelException;
 
 
 public class ShoppingCart {
@@ -42,20 +43,28 @@ public class ShoppingCart {
                                 System.out.println("Product not found");
                                 return;
                             }
-                            
                             price = Store.products.get(prod);
-                          
+                            try{
+                                balance = w.getBalance();
+                            } catch(ClosedChannelException e){
+                                System.out.println("wallet.txt is locked at this moment");
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                System.out.println("IO error");
+                                e.printStackTrace();}
+                            if( (balance-price) < 0 ) 
+                                System.out.println("You cannot afford that product. Current balance: " + balance);
+    
                             w.safeWithdraw(price);
-                         //   System.out.println("Your new balance is: " + (balance-price) + " credits");
-                            
+                            System.out.println("Your new balance is: " + (balance-price) + " credits");
                             p.addProduct( prod );
                             
                             w.close();      
                             p.close();
-                      } catch(Exception e){
-                              System.out.println("Error error!");
-                              e.printStackTrace();
-                      } 
+                        } catch(Exception e){
+                            System.out.println("Error error!");
+                            e.printStackTrace();
+                        }
                         break;
                 case 2:    
                         try {
