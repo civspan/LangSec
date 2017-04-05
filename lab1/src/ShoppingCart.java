@@ -27,7 +27,6 @@ public class ShoppingCart {
                 case 1: 
 
                         try {
-                            System.out.println(Thread.currentThread().getName() + ": Lock acquired.");
                             w = new Wallet();
                             p = new Pocket();
                             String prod;
