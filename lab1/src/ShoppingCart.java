@@ -43,15 +43,13 @@ public class ShoppingCart {
                             }
                             price = Store.products.get(prod);
                             
-                            balance = w.getBalance();
+                            /* call to safe withdraw method that locks wallet.txt */
+                            w.safeWithdraw(price);
                             
-                            if( (balance-price) < 0 ) 
-                                System.out.println("You cannot afford that product. Current balance: " + balance);
-                            else {
-                                w.safeWithdraw(price);
-                                System.out.println("Your new balance is: " + (balance-price) + " credits");
-                                p.addProduct( prod );
-                            }
+                            balance = w.getBalance();
+                            System.out.println("Your new balance is: " + (balance-price) + " credits");
+                            p.safeAddProduct( prod );
+
                             w.close();      
                             p.close();
                         }catch (Exception e) {

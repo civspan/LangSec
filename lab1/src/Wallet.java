@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
-import java.nio.channels.ClosedChannelException;
 
 public class Wallet {
    /**
@@ -29,12 +28,16 @@ public class Wallet {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int price = valueToWithdraw;
         this.lock  = channel.lock();
-                  
         int balance = getBalance();
-        System.out.println("Pausing after comparing price and balance, but before updating balance..");
-        br.readLine();
-        setBalance( (balance-price) );
-
+                           
+        if( balance < price ) {
+            throw new Exception("Not enough schmeckles");
+        }
+        else {          
+            System.out.println("Pausing after reading price and checking it against balance, but before updating balance..");
+            br.readLine();
+            setBalance( (balance-price) );
+        }
         lock.release();
         close(); 
     }	
