@@ -31,7 +31,7 @@ public class Wallet {
         int balance = getBalance();
                            
         if( balance < price ) {
-            throw new Exception("Not enough schmeckles");
+            throw new Exception("Not enough credits in wallet");
         }
         else {          
             System.out.println("Pausing after reading price and checking it against balance, but before updating balance..");
@@ -39,10 +39,7 @@ public class Wallet {
             setBalance( (balance-price) );
         }
         lock.release();
-        close(); 
     }	
-
-
 
    /**
     * Gets the wallet balance. 

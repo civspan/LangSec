@@ -10,7 +10,11 @@ public class ShoppingCart {
     public static void main(String[] args){
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
-            System.out.print("Type 0 to exit\n1 to run buggy frontend \n2 to reset credits and pocket: ");
+            System.out.print("Type "
+                    + "\n0 to exit"
+                    + "\n1 to run frontend with buggy API"
+                    + "\n2 to run frontend with fixed API "
+                    + "\n3 to reset resources: ");
             int choice = 0;
         
             try {
@@ -24,7 +28,43 @@ public class ShoppingCart {
             switch(choice) {
                 case 0: 
                         return;
-                case 1: 
+                case 1:
+                        try {
+                            w = new Wallet();
+                            p = new Pocket();
+                            String prod;
+                            int balance;
+                            int price;
+
+                            balance = w.getBalance();
+                            System.out.println("Your balance: " + balance + " credits");
+                            System.out.print(Store.asString());
+                            System.out.print("What do you want to buy?: ");
+                            prod = br.readLine();
+
+                            if(! Store.products.containsKey(prod)) {
+                                System.out.println("Product not found");
+                                return;
+                            }
+
+                            price = Store.products.get(prod);
+                            if( (balance-price) < 0 ) {
+                                System.out.println("You cannot afford that product");
+                                return;
+                            }
+                            System.out.println("Pausing after comparing price and balance, but before updating balance..");
+                            br.readLine();
+                            w.setBalance( (balance-price) );
+                            p.addProduct( prod );
+                            System.out.println("Your new balance is: " + (balance-price) + " credits");
+                            w.close();      
+                            p.close();
+                        } catch(Exception e){
+                            System.out.println("Error error!");
+                            e.printStackTrace();
+                        } 
+                         break;
+                case 2: 
                         try{
                             w = new Wallet();
                             p = new Pocket();
@@ -62,7 +102,7 @@ public class ShoppingCart {
                             }
                         }
                         break;
-                case 2:    
+                case 3:    
                         try {
                             w = new Wallet();
                             p = new Pocket();
@@ -76,6 +116,8 @@ public class ShoppingCart {
                             
                         }
                         break;
+                default:
+                        System.out.println("Not a valid choice");;
             }
         }
     }

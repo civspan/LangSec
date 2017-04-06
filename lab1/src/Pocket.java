@@ -39,7 +39,6 @@ public class Pocket {
         this.file.seek(this.file.length());
         this.file.writeBytes(product+'\n'); 
         lock.release();
-        close(); 
     }
    /**
     * Resets the pocket. Written by group 31.
