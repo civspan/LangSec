@@ -35,7 +35,8 @@ public class Pocket {
 
     }
     public void safeAddProduct(String product) throws Exception {
-        this.lock  = channel.lock();
+        if ( (this.lock  = channel.tryLock()) == null )
+            throw new Exception("pocket.txt is locked by another process");        
         this.file.seek(this.file.length());
         this.file.writeBytes(product+'\n'); 
         lock.release();
