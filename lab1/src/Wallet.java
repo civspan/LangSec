@@ -1,51 +1,45 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.concurrent.locks.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 
 public class Wallet {
    /**
     * The RandomAccessFile of the wallet file
     */  
     private RandomAccessFile file;
+    private FileLock lock;
+    FileChannel channel;
    
-    final Lock lock = new ReentrantLock();
-   
-    public void safeWithdraw(int valueToWithdraw) throws Exception{
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int price = valueToWithdraw;
-        lock.lock();
-        try{           
-            int balance = getBalance();
-              if( (balance-price) < 0 ) {
-                  System.out.println("You cannot afford that product. Current balance: " + balance);
-              }else {
-                  System.out.println("Pausing after comparing price and balance, but before updating balance..");
-                  br.readLine();
-                  setBalance( (balance-price) );
-                  System.out.println("Your new balance is: " + (balance-price) + " credits");
-                   
-              }
-        } catch(Exception e){
-            System.out.println("Error error!");
-            e.printStackTrace();
-        } finally {
-            close(); 
-            lock.unlock();
-        }
-       
-    }	
-
-   /**
+    /**
     * Creates a Wallet object
     *
     * A Wallet object interfaces with the wallet RandomAccessFile
     */
     public Wallet () throws Exception {
 	this.file = new RandomAccessFile(new File("wallet.txt"), "rw");
+        this.channel = file.getChannel();
     }
+    
+    public void safeWithdraw(int valueToWithdraw) throws Exception{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int price = valueToWithdraw;
+        this.lock  = channel.lock();
+        int balance = getBalance();
+                           
+        if( balance < price ) {
+            throw new Exception("Not enough credits in wallet");
+        }
+        else {          
+            System.out.println("Pausing after reading price and checking it against balance, but before updating balance..");
+            br.readLine();
+            setBalance( (balance-price) );
+        }
+        lock.release();
+    }	
 
    /**
     * Gets the wallet balance. 
