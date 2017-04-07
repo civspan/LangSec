@@ -26,9 +26,9 @@ public class ShoppingCart {
             Wallet w;
             Pocket p;
             switch(choice) {
-                case 0: 
+                case 0: /* Type 0 to exit */
                         return;
-                case 1:
+                case 1: /* Type 1 to run frontend w. buggy API*/
                         try {
                             w = new Wallet();
                             p = new Pocket();
@@ -64,7 +64,7 @@ public class ShoppingCart {
                             e.printStackTrace();
                         } 
                          break;
-                case 2: 
+                case 2: /* Type 2 to run frontend w. secured API*/
                         try{
                             w = new Wallet();
                             p = new Pocket();
@@ -93,7 +93,7 @@ public class ShoppingCart {
                             w.close();      
                             p.close();
                         }catch (Exception e) {
-                            System.out.println("IO error");
+                            System.out.println("IO error, stacktrace: ");
                             e.printStackTrace();
                             try {
                                 sleep(100);
@@ -102,7 +102,7 @@ public class ShoppingCart {
                             }
                         }
                         break;
-                case 3:    
+                case 3:    /* Type 3 to reset wallet and pocket */
                         try {
                             w = new Wallet();
                             p = new Pocket();

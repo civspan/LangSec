@@ -25,11 +25,11 @@ public class Wallet {
     }
     
     public void safeWithdraw(int valueToWithdraw) throws Exception{
+        if ( (this.lock  = channel.tryLock()) == null )
+            throw new Exception("wallet.txt is locked by another process");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int price = valueToWithdraw;
-        this.lock  = channel.lock();
         int balance = getBalance();
-                           
         if( balance < price ) {
             throw new Exception("Not enough credits in wallet");
         }
